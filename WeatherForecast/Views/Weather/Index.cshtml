@@ -1,0 +1,43 @@
+﻿@{
+    string[] cities = { "Tashkent", "London", "Utah", "Moscow", "Paris", "Pekin", "Seoul", "Shanghai", "Mumbai", "Istambul", "Tokyo", "Helsinki", "Stockholm", "Canberra", "HongKong" };
+      
+}
+<div class="containerMain">
+
+    <div class="container1">
+        <div class="SearchBox">
+            <select placeholder="Search for City" id="sltCountry" autocomplete="on">
+                @for (int i = 0; i < cities.Length; i++)
+                {
+                    <option value="@cities[i]">@cities[i]</option>
+                }
+            </select>
+            <button class="SearchBox-button" id="submit" onclick="getOption()">
+                <i class="SearchBox-icon  material-icons">search</i>
+            </button>
+        </div>
+    </div>
+    <div id="dvWeatherDetails"></div>
+</div>
+
+@section Scripts {
+
+    <link href="~/css/WeatherIndex.css" rel="stylesheet" />
+
+    <link href="~/css/weather.css" rel="stylesheet" />
+
+    
+}
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+
+<script>
+    function getOption() {
+
+        var selected = document.getElementById('sltCountry').value;
+        $("#dvWeatherDetails").load(`/Weather/Detail?search=${selected}`);
+
+    }
+
+</script>

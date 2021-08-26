@@ -1,0 +1,103 @@
+﻿@model IEnumerable<WeatherForecast.Models.Chat>
+
+<div class="container">
+    <div class="row">&nbsp;</div>
+    <div class="row">
+        <div class="col-2">
+            <label class="text-dark">Name</label>
+        </div>
+        <div class="col-4"><input type="text" id="nameInput" /></div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-2">
+            <label class="text-dark">Message</label>
+        </div>
+        <div class="col-4"><input type="text" id="messageInput" /></div>
+    </div>
+    <div class="row">&nbsp;</div>
+    <div class="row">
+        <div class="col-6">
+            <input type="button" id="sendButton" value="Send Message" />
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12">
+        <hr />
+    </div>
+</div>
+<div class="row">
+    <div class="col-6">
+        <div id="messageList" class="chat-box">
+            @foreach (var item in Model)
+            {
+                <div class="container">
+                    <p>@item.Name</p>
+                    <p>@item.Message</p>
+                    <span class="time-right ">@item.CreatedOn</span>
+                </div>
+            }
+
+        </div>
+
+    </div>
+</div>
+
+@section Scripts {  
+    <link href="~/css/chats.css" rel="stylesheet" />
+}
+
+<script src="~/js/microsoft-signalr/signalr.js"></script>
+
+<script>
+
+    var connection = new signalR.HubConnectionBuilder().withUrl("/chathub").build();
+        
+
+    connection.on("ReceiveMessage", function (name, message) {
+        var today = new Date();
+        var hours = today.getHours() > 12 ? today.getHours() - 12 : today.getHours();
+        var mins = today.getMinutes() < 10 ? "0" + today.getMinutes() : today.getMinutes();
+        var secs = today.getSeconds() < 10 ? "0" + today.getSeconds() : today.getSeconds();
+        var am_pm = today.getHours() >= 12 ? "PM" : "AM";
+        var date = today.getMonth() + 1 + '/' + today.getDate() + '/' + today.getFullYear();
+        var time = hours + ':' + mins + ':' + secs;
+
+        var dateTime = date + '  ' + time + ' ' + am_pm;
+        $("#messageList").append(`<div class="container"><p>${name}</p><p>${message}</p> <span class=\"time-right\">${dateTime}</span></div>`);
+    });
+
+    connection.start().then(function () {       
+    }).catch(function (err) {
+        return console.error(err.toString());
+    });
+
+    document.getElementById("sendButton").addEventListener("click", function (event) {
+        var name = document.getElementById("nameInput").value;
+        var message = document.getElementById("messageInput").value;
+
+        connection.invoke("SendMessage", name, message).catch(function () {
+            document.getElementById("messageInput").value = "";
+        }).catch(function (err) {
+            return console.error(err.toString());
+        });
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("Add")",
+            data: { name: name, message: message },
+            dataType: "text",
+            success: function (msg) {
+                console.log(msg);
+            },
+            error: function (req, status, error) {
+                console.log(msg);
+            }
+        });
+
+        event.preventDefault();
+    });
+
+</script>
+

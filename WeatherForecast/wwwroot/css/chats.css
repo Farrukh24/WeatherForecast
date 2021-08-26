@@ -1,0 +1,58 @@
+﻿/* Chat containers */
+.chat-box .container {
+    border: 2px solid #dedede;
+    background-color: #d6d6d6;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 10px 0;
+}
+.chat-box p{
+    font-family: Arial, Helvetica, sans-serif;
+    color: #000;
+}
+
+/* Clear floats */
+.chat-box .container::after {
+    content: "";
+    clear: both;
+    display: table;
+}
+
+
+/* Style time text */
+.chat-box .time-right {
+    float: right;
+    color: #313030;
+}
+
+#nameInput {
+    border-radius: 16px;
+    outline: none;
+    border: 1px solid #c9c2c2;
+    background-color: aliceblue;
+    width: 100%;
+    font-size: 25px;
+}
+
+#messageInput {
+    border-radius: 16px;
+    outline: none;
+    border: 1px solid #c9c2c2;
+    background-color: aliceblue;
+    width: 100%;
+    font-size: 25px;
+}
+
+.text-dark {
+    font-size: 25px;
+    font-family: Arial;
+    
+}
+
+#sendButton {
+    border-radius: 10px;
+    outline: none;
+    background-color: lightgreen;
+    color: black;
+    font-size: 20px;
+}
